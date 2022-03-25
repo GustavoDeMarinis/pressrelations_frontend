@@ -13,6 +13,7 @@ import { format } from "date-fns";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
+import { axiosPost } from "../../helpers/axiosCalls";
 
 const CreateNewsForm = ({ tags, onClose }) => {
   const newsForm = useForm({
@@ -41,15 +42,26 @@ const CreateNewsForm = ({ tags, onClose }) => {
   };
 
   const { fields, append, remove } = useFieldArray({
-    control, // control props comes from useForm (optional: if you are using FormContext)
-    name: "newTags", // unique name for your Field Array
+    control,
+    name: "newTags",
   });
-
+  const formatValues = (values) => {
+    return {
+      news: {
+        headline: values.headline,
+        date: format(new Date(values.date), "yyyy-MM-dd HH:mm:ssx"),
+        tags: values.tags.concat(values.newTags),
+        publication: values.publication,
+        text: values.text,
+      },
+    };
+  };
   return (
     <form
       onSubmit={handleSubmit(
         (values) => {
-          console.log(format(new Date(values.date), "dd-MM-yyyy HH:mm:ssx"));
+          axiosPost("/news", JSON.stringify(formatValues(values)));
+          // console.log(JSON.stringify(formatValues(values)));
         },
         (errors) => {
           console.log(errors);
@@ -72,11 +84,9 @@ const CreateNewsForm = ({ tags, onClose }) => {
           })}
         />
         <Input
-          placeholder="Date"
           type="datetime-local"
           {...register("date", {
             required: "this field is required",
-            minLength: { value: 4, message: "Minimum length should be 4" },
           })}
         />
         <Input
@@ -120,7 +130,7 @@ const CreateNewsForm = ({ tags, onClose }) => {
                 w={200}
                 placeholder="Create Tag"
                 key={item.id}
-                {...register(`newTags.${index}.value`)}
+                {...register(`newTags.${index}`)}
               />
               <Button onClick={() => remove(index)}>
                 <CloseIcon w={4} h={4} />
