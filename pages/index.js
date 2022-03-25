@@ -28,7 +28,7 @@ export default function Home() {
       </Head>
       <Box w={300}>
         {data?.map((news) => {
-          return <NewsCards {...news}></NewsCards>;
+          return <NewsCards key={news.id} {...news}></NewsCards>;
         })}
       </Box>
     </div>

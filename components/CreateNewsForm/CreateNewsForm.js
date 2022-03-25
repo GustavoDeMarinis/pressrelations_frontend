@@ -1,7 +1,7 @@
-import { Box } from "@chakra-ui/react";
+import { Input, SimpleGrid } from "@chakra-ui/react";
 import React from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import Input from "../Atoms/Input/Input";
+
 const CreateNewsForm = () => {
   const newsForm = useForm({
     defaultValues: {
@@ -12,14 +12,40 @@ const CreateNewsForm = () => {
       tags: [],
     },
   });
+  const { register } = newsForm;
+
   return (
     <FormProvider {...newsForm}>
-      <Box m={5}>
-        <Input name="headline" placeholder="headline" />
-        <Input name="text" placeholder="text" />
-        <Input name="date" placeholder="date" />
-        <Input name="publication" placeholder="publication" />
-      </Box>
+      <SimpleGrid columns={1} spacing={5}>
+        <Input
+          placeholder="Headline"
+          {...register("headline", {
+            required: "This is required",
+            minLength: { value: 4, message: "Minimum length should be 4" },
+          })}
+        />
+        <Input
+          placeholder="Text"
+          {...register("text", {
+            required: "This is required",
+            minLength: { value: 4, message: "Minimum length should be 4" },
+          })}
+        />
+        <Input
+          placeholder="Date"
+          {...register("date", {
+            required: "This is required",
+            minLength: { value: 4, message: "Minimum length should be 4" },
+          })}
+        />
+        <Input
+          placeholder="Publication"
+          {...register("publication", {
+            required: "This is required",
+            minLength: { value: 4, message: "Minimum length should be 4" },
+          })}
+        />
+      </SimpleGrid>
     </FormProvider>
   );
 };

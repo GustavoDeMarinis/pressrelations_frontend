@@ -17,12 +17,12 @@ const CreateNewsModal = () => {
   return (
     <>
       <Button mt={4} onClick={onOpen}>
-        Open Modal
+        Create News
       </Button>
       <Modal isOpen={isOpen} size="xl" onClose={onClose}>
         <ModalOverlay />
         <ModalContent>
-          <ModalHeader>Modal Title</ModalHeader>
+          <ModalHeader>Create News</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
             <CreateNewsForm />
