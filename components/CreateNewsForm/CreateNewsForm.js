@@ -8,13 +8,14 @@ import {
   SimpleGrid,
   Stack,
 } from "@chakra-ui/react";
-import { format } from "date-fns";
+
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { axiosGet, axiosPost } from "../../helpers/axiosCalls";
+import { formatValues } from "../../helpers/formHelpers";
 
-const CreateNewsForm = ({ tags, onClose, setNews }) => {
+const CreateNewsForm = ({ tags, onClose, setNews, forceUpdate }) => {
   const newsForm = useForm({
     defaultValues: {
       headline: "",
@@ -44,23 +45,13 @@ const CreateNewsForm = ({ tags, onClose, setNews }) => {
     name: "newTags",
   });
 
-  const formatValues = (values) => {
-    return {
-      news: {
-        headline: values.headline,
-        date: format(new Date(values.date), "yyyy-MM-dd HH:mm:ssx"),
-        tags: values.tags.concat(values.newTags),
-        publication: values.publication,
-        text: values.text,
-      },
-    };
-  };
   return (
     <form
       onSubmit={handleSubmit(
         (values) => {
           axiosPost("/news", formatValues(values));
-          axiosGet("/news").then((res) => setNews(res.data.data));
+          axiosGet("/news").then((res) => setNews([...res.data.data]));
+          forceUpdate();
           onClose();
         },
         (errors) => {
@@ -130,7 +121,8 @@ const CreateNewsForm = ({ tags, onClose, setNews }) => {
                 w={200}
                 placeholder="Create Tag"
                 key={item.id}
-                {...register(`newTags.${index}`)}
+                {...register(`newTags.${index}.name`)}
+                onChange={() => console.log(getValues())}
               />
               <Button onClick={() => remove(index)}>
                 <CloseIcon w={4} h={4} />
@@ -140,8 +132,8 @@ const CreateNewsForm = ({ tags, onClose, setNews }) => {
         })}
       </CheckboxGroup>
       <Flex alignContent="end" marginTop={5} marginBottom={3}>
-        <Button colorScheme="blue" marginLeft="auto" type="submit">
-          SUBMIT
+        <Button colorScheme="teal" marginLeft="auto" type="submit">
+          Create
         </Button>
       </Flex>
     </form>

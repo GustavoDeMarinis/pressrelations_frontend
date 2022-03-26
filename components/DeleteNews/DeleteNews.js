@@ -12,18 +12,19 @@ import {
 import React from "react";
 import { axiosDelete, axiosGet } from "../../helpers/axiosCalls";
 
-const DeleteNews = ({ id, setNews }) => {
+const DeleteNews = ({ id, setNews, forceUpdate }) => {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const cancelRef = React.useRef();
 
   const deleteHandler = (id) => {
     axiosDelete("/news", id);
-    axiosGet("/news").then((res) => setNews(res.data.data));
+    axiosGet("/news").then((res) => setNews([...res.data.data]));
+    forceUpdate();
     onClose();
   };
   return (
     <>
-      <Button colorScheme="red" onClick={onOpen}>
+      <Button marginLeft={5} colorScheme="red" onClick={onOpen}>
         <DeleteIcon />
       </Button>
 

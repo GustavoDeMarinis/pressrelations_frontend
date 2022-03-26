@@ -1,43 +1,33 @@
-import {
-  Button,
-  Checkbox,
-  CheckboxGroup,
-  Flex,
-  Heading,
-  Input,
-  SimpleGrid,
-  Stack,
-} from "@chakra-ui/react";
-import { format } from "date-fns";
-import { AddIcon, CloseIcon } from "@chakra-ui/icons";
+import { Button, Flex, Input, Stack } from "@chakra-ui/react";
+
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { axiosGet, axiosGetById, axiosUpdate } from "../../helpers/axiosCalls";
+import { formatValues } from "../../helpers/formHelpers";
 
-const EditNews = ({ id, onClose }) => {
-  const [news, setNews] = useState({});
+const EditNews = ({ id, onClose, forceUpdate, setNews }) => {
+  const [edit, setEdit] = useState(null);
+
+  const editNewsForm = useForm({});
+
+  const { register, handleSubmit, reset } = editNewsForm;
 
   useEffect(() => {
-    axiosGetById("/news", id).then((res) => setNews(res.data.data));
+    axiosGetById("/news", id).then((res) => setEdit(res.data.data));
   }, [id]);
 
-  const editNewsForm = useForm({
-    defaultValues: {
-      headline: news?.headline,
-      text: news?.text,
-      date: news?.date,
-      publication: news?.publication,
-    },
-  });
-
-  const { register, setValue, getValues, control, handleSubmit } = editNewsForm;
+  useEffect(() => {
+    reset(edit);
+  }, [edit, reset]);
 
   return (
     <form
       onSubmit={handleSubmit(
         (values) => {
-          axiosUpdate("/news", formatValues(values));
-          axiosGet("/news").then((res) => setNews(res.data.data));
+          axiosUpdate("/news", id, formatValues(values));
+          axiosGet("/news").then((res) => {
+            setNews([...res.data.data]);
+          });
           onClose();
         },
         (errors) => {
@@ -76,8 +66,8 @@ const EditNews = ({ id, onClose }) => {
       </Stack>
 
       <Flex alignContent="end" marginTop={5} marginBottom={3}>
-        <Button colorScheme="blue" marginLeft="auto" type="submit">
-          SUBMIT
+        <Button colorScheme="teal" marginLeft="auto" type="submit">
+          Edit
         </Button>
       </Flex>
     </form>
