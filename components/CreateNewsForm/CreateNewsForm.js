@@ -1,5 +1,4 @@
 import {
-  Box,
   Button,
   Checkbox,
   CheckboxGroup,
@@ -13,9 +12,9 @@ import { format } from "date-fns";
 import { AddIcon, CloseIcon } from "@chakra-ui/icons";
 import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
-import { axiosPost } from "../../helpers/axiosCalls";
+import { axiosGet, axiosPost } from "../../helpers/axiosCalls";
 
-const CreateNewsForm = ({ tags, onClose }) => {
+const CreateNewsForm = ({ tags, onClose, setNews }) => {
   const newsForm = useForm({
     defaultValues: {
       headline: "",
@@ -26,8 +25,7 @@ const CreateNewsForm = ({ tags, onClose }) => {
       newTags: [],
     },
   });
-  const { register, setValue, getValues, control, handleSubmit, formState } =
-    newsForm;
+  const { register, setValue, getValues, control, handleSubmit } = newsForm;
 
   const checkboxHandler = (isChecked, value) => {
     const tagsValues = getValues("tags");
@@ -45,6 +43,7 @@ const CreateNewsForm = ({ tags, onClose }) => {
     control,
     name: "newTags",
   });
+
   const formatValues = (values) => {
     return {
       news: {
@@ -60,8 +59,9 @@ const CreateNewsForm = ({ tags, onClose }) => {
     <form
       onSubmit={handleSubmit(
         (values) => {
-          axiosPost("/news", JSON.stringify(formatValues(values)));
-          // console.log(JSON.stringify(formatValues(values)));
+          axiosPost("/news", formatValues(values));
+          axiosGet("/news").then((res) => setNews(res.data.data));
+          onClose();
         },
         (errors) => {
           console.log(errors);

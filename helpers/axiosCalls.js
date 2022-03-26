@@ -2,24 +2,31 @@ import axios from "axios";
 
 const AXIOSURL = "http://localho.st:4000";
 
-export const axiosGet = async (url, setState) => {
-  await axios.get(`${AXIOSURL}${url}`).then((response) => {
-    setState(response.data.data);
-  });
+export const axiosGet = (url) => {
+  return axios.get(`${AXIOSURL}${url}`);
 };
 
-export const axiosPost = async (url, values) => {
-  await axios.post(`${AXIOSURL}${url}`, values, {
+export const axiosGetById = (url, id) => {
+  return axios.get(`${AXIOSURL}${url}/${id}`);
+};
+
+export const axiosPost = (url, values) => {
+  return axios.post(`${AXIOSURL}${url}`, values, {
     headers: {
       "Content-Type": "application/json",
     },
   });
 };
 
-export const axiosUpdate = async (url, values) => {
-  await axios.put(`${AXIOSURL}${url}`);
+export const axiosUpdate = (url, id, values) => {
+  return axios.put(`${AXIOSURL}${url}/${id}`, values, {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 };
 
-export const axiosDelete = async (url) => {
-  await axios.delete(`${AXIOSURL}${url}`);
+export const axiosDelete = (url, id) => {
+  console.log(id);
+  return axios.delete(`${AXIOSURL}${url}/${id}`);
 };
