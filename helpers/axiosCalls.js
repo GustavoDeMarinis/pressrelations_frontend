@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const AXIOSURL = "http://localho.st:4000";
+const AXIOSURL = "http://localhost:4000";
 
 export const axiosGet = (endpoint) => {
   return axios.get(`${AXIOSURL}${endpoint}`);
