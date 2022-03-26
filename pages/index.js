@@ -10,7 +10,7 @@ import TableTags from "../components/TableTags/TableTags";
 export default function Home() {
   const [news, setNews] = useState([]);
   const [tags, setTags] = useState([]);
-  const [isTableNews, setTable] = useState(false);
+  const [isTableNews, setTable] = useState(true);
 
   const [, updateState] = useState();
   const forceUpdate = useCallback(() => updateState({}), []);
