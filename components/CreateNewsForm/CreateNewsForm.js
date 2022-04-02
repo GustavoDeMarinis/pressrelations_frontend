@@ -14,6 +14,7 @@ import React from "react";
 import { useFieldArray, useForm } from "react-hook-form";
 import { axiosGet, axiosPost } from "../../helpers/axiosCalls";
 import { formatValues } from "../../helpers/formHelpers";
+import Error from "../Error/Error";
 
 const CreateNewsForm = ({ tags, onClose, setNews, forceUpdate }) => {
   const newsForm = useForm({
@@ -26,7 +27,14 @@ const CreateNewsForm = ({ tags, onClose, setNews, forceUpdate }) => {
       newTags: [],
     },
   });
-  const { register, setValue, getValues, control, handleSubmit } = newsForm;
+  const {
+    register,
+    setValue,
+    getValues,
+    control,
+    handleSubmit,
+    formState: { errors },
+  } = newsForm;
 
   const checkboxHandler = (isChecked, value) => {
     const tagsValues = getValues("tags");
@@ -67,6 +75,7 @@ const CreateNewsForm = ({ tags, onClose, setNews, forceUpdate }) => {
             minLength: { value: 4, message: "Minimum length should be 4" },
           })}
         />
+        {errors.headline && <Error>{errors.headline.message}</Error>}
         <Input
           placeholder="Text"
           {...register("text", {
@@ -74,12 +83,16 @@ const CreateNewsForm = ({ tags, onClose, setNews, forceUpdate }) => {
             minLength: { value: 4, message: "Minimum length should be 4" },
           })}
         />
+        {errors.text && <Error>{errors.text.message}</Error>}
+
         <Input
           type="datetime-local"
           {...register("date", {
             required: "this field is required",
           })}
         />
+        {errors.date && <Error>{errors.date.message}</Error>}
+
         <Input
           placeholder="Publication"
           {...register("publication", {
@@ -87,6 +100,7 @@ const CreateNewsForm = ({ tags, onClose, setNews, forceUpdate }) => {
             minLength: { value: 4, message: "Minimum length should be 4" },
           })}
         />
+        {errors.publication && <Error>{errors.publication.message}</Error>}
       </Stack>
       <CheckboxGroup>
         <Heading as="h2" size="md" color="#474747">
