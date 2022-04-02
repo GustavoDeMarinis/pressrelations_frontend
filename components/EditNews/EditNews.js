@@ -86,7 +86,7 @@ const EditNews = ({ id, onClose, forceUpdate, setNews }) => {
           })}
         />
         {errors.text && <Error>{errors.text.message}</Error>}
-        {console.log(dirtyFields)}
+
         <Input
           id="date"
           onFocus={() => setTypeDate(true)}
@@ -95,7 +95,6 @@ const EditNews = ({ id, onClose, forceUpdate, setNews }) => {
             required: "this field is required",
           })}
         />
-        {console.log(getValues())}
         {errors.date && <Error>{errors.date.message}</Error>}
         <Input
           placeholder="Publication"
